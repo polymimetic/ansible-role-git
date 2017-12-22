@@ -1,0 +1,18 @@
+---
+# Configure git
+
+- name: Configure .gitconfig file
+  template:
+    src: gitconfig.j2
+    dest: "/home/{{ git_user }}/.gitconfig"
+    owner: "{{ git_user }}"
+    group: "{{ git_user }}"
+  when: git_config
+
+- name: Add .gitignore file
+  template:
+    src: gitignore.j2
+    dest: "/home/{{ git_user }}/{{ git_config.core.excludesfile | basename }}"
+    owner: "{{ git_user }}"
+    group: "{{ git_user }}"
+  when: git_ignore and git_config.core is defined and git_config.core.excludesfile is defined

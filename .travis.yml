@@ -1,0 +1,36 @@
+---
+services: docker
+
+env:
+  # Test source install on latest supported OSes.
+  - distro: xenial
+    playbook: test-source.yml
+    GIT_VERSION: 2.9.3
+
+  # Test package install on all supported OSes.
+  - distro: gallium
+    playbook: test.yml
+    GIT_VERSION: 2.7.4
+  - distro: xenial
+    playbook: test.yml
+    GIT_VERSION: 2.7.4
+
+script:
+  # Configure test script so we can run extra tests after playbook is run.
+  - export container_id=$(date +%s)
+  - export cleanup=false
+  - export test_suite=false
+
+  # Run tests.
+  - chmod +x ${PWD}/tests/run-test.sh
+  - ${PWD}/tests/run-test.sh
+
+  # Ensure Git is installed and at the right version.
+  - 'docker exec --tty ${container_id} env TERM=xterm which git'
+  - 'docker exec --tty ${container_id} env TERM=xterm test -x /usr/bin/git'
+
+  - 'docker exec --tty ${container_id} env TERM=xterm git --version'
+  - 'docker exec --tty ${container_id} env TERM=xterm /usr/bin/git --version | grep -qF "$GIT_VERSION"'
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/

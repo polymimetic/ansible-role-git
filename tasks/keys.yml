@@ -1,0 +1,31 @@
+---
+# Add SSH keys to Github & Bitbucket
+
+- name: Download ssh-keyreg script
+  get_url:
+    url: https://raw.githubusercontent.com/b4b4r07/ssh-keyreg/master/bin/ssh-keyreg
+    dest: /usr/local/bin/ssh-keyreg
+    mode: 0555
+
+- name: Check that the user ssh key exists
+  stat:
+    path: "{{ git_ssh_keyfile }}"
+  register: git_ssh_key_exists
+
+- name: Add SSH Key to GitHub
+  shell: ssh-keyreg --path {{ git_ssh_keyfile }} --user {{ git_github_user }}:{{ git_github_password }} github
+  become: true
+  become_user: "{{ git_user }}"
+  when:
+    - git_github_user is defined and git_github_user != ''
+    - git_github_password is defined and git_github_password != ''
+    - git_ssh_key_exists.stat.exists == true
+
+- name: Add SSH Key to Bitbucket
+  shell: ssh-keyreg --path {{ git_ssh_keyfile }} --user {{ git_bitbucket_user }}:{{ git_bitbucket_password }} bitbucket
+  become: true
+  become_user: "{{ git_user }}"
+  when:
+    - git_bitbucket_user is defined and git_bitbucket_user != ''
+    - git_bitbucket_password is defined and git_bitbucket_password != ''
+    - git_ssh_key_exists.stat.exists == true

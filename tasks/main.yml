@@ -1,0 +1,32 @@
+---
+# tasks file for git
+
+# Install Git
+- name: Update apt cache
+  apt: 
+    update_cache: yes 
+    cache_valid_time: 86400
+
+- name: Ensure git is installed
+  apt:
+    name: "{{ item }}"
+    state: present
+  become: yes
+  with_items: "{{ git_packages | list }}"
+  when: git_install_from_source == false
+
+# Install Git via Source
+- include_tasks: source.yml
+  when: git_install_from_source == true
+
+# Configure Git
+- include_tasks: config.yml
+  when: git_configure == true
+
+# Git Known Hosts
+- include_tasks: hosts.yml
+  when: git_hosts == true
+
+# Git SSH Keys
+- include_tasks: keys.yml
+  when: git_keys == true

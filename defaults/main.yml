@@ -1,0 +1,125 @@
+---
+# defaults file for git
+
+# Array of git packages to install.
+git_packages:
+  - git
+  - git-core
+  - git-svn
+  - git-extras
+
+git_configure: true
+git_hosts: true
+git_keys: true
+
+git_install_from_source_dependencies:
+  - libcurl4-gnutls-dev
+  - libexpat1-dev
+  - gettext
+  - libssl-dev
+  - build-essential
+  - gcc
+
+git_workspace: /root
+
+# If set to TRUE, git will be installed from source, using the version set with
+# the 'git_version' variable instead of using a package.
+git_install_from_source: false
+git_install_path: "/usr"
+git_version: "2.9.3"
+
+# If git is already installed at and older version, force a new source build.
+# Only applies if git_install_from_source is `true`.
+git_install_from_source_force_update: false
+
+# Leave this at it's default.
+git_reinstall_from_source: false
+
+# Default git user.
+git_user: "{{ ansible_env.USER }}"
+
+# Gitconfig user name.
+git_config_name: null
+
+# Gitconfig user email.
+git_config_email: null
+
+# Gitconfig editor
+git_config_editor: nano
+
+# Git configuration object.
+git_config:
+  user:
+    name: "{{ git_config_name | default(none) }}"
+    email: "{{ git_config_email | default(none) }}"
+  color:
+    branch: auto
+    diff: auto
+    interactive: auto
+    status: auto
+    ui: true
+  core:
+    editor: "{{ git_config_editor | default('nano') }}"
+    excludesfile: "/home/{{ git_user }}/.gitignore"
+  credential:
+    helper: cache
+  push:
+    default: simple
+  alias:
+    br: branch
+    ci: commit
+    clo: clone
+    co: checkout
+    lg: log -M --decorate --graph --oneline
+    pur: pull --rebase
+    rc: rebase --continue
+    st: status
+    sth: stash
+
+# Array of filenames and patterns for git to globally ignore.
+git_ignore:
+  - ".vagrant"
+  - "*.com"
+  - "*.class"
+  - "*.dll"
+  - "*.exe"
+  - "*.o"
+  - "*.so"
+  - "*.7z"
+  - "*.dmg"
+  - "*.gz"
+  - "*.iso"
+  - "*.jar"
+  - "*.rar"
+  - "*.tar"
+  - "*.zip"
+  - "*.log"
+  - "*.sql"
+  - "*.sqlite"
+  - ".DS_Store"
+  - ".DS_Store?"
+  - "._*"
+  - ".Spotlight-V100"
+  - ".Trashes"
+  - "ehthumbs.db"
+  - "Thumbs.db"
+
+# Array of name and key values for known git hosts.
+git_known_hosts:
+  - name: github.com
+    key: github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
+  - name: bitbucket.org
+    key: bitbucket.org ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAubiN81eDcafrgMeLzaFPsw2kNvEcqTKl/VqLat/MaB33pZy0y3rJZtnqwR2qOOvbwKZYKiEO1O6VqNEBxKvJJelCq0dTXWT5pbO2gDXC6h6QDXCaHo6pOHGPUy+YBaGQRGuSusMEASYiWunYN0vCAI8QaXnWMXNMdFP3jHAJH0eDsoiGnLPBlBp4TNm6rYI74nMzgz3B9IikW4WVK+dc8KZJZWYjAuORU3jc1c/NPskD2ASinf8v3xnfXeukU0sJ5N6m5E8VLjObPEO+mN2t/FZTMZLiFqPWc/ALSqnMnnhwrNi2rbfg/rd/IpL8Le3pSBne8+seeFVBoGqzHM9yXw==
+  - name: gitlab.com
+    key: gitlab.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAfuCHKVTjquxvt6CM6tdG4SLp1Btn/nOeHHE5UOzRdf
+  - name: gitlab.com
+    key: gitlab.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsj2bNKTBSpIYDEGk9KxsGh3mySTRgMtXL583qmBpzeQ+jqCMRgBqB98u3z++J1sKlXHWfM9dyhSevkMwSbhoR8XIq/U0tCNyokEi/ueaBMCvbcTHhO7FcwzY92WK4Yt0aGROY5qX2UKSeOvuP4D6TPqKF1onrSzH9bx9XUf2lEdWT/ia1NEKjunUqu1xOB/StKDHMoX4/OKyIzuS0q/T1zOATthvasJFoPrAjkohTyaDUz2LN5JoH839hViyEG82yB+MjcFV5MU3N1l1QL3cVUCh93xSaua1N85qivl+siMkPGbO5xR/En4iEY6K2XPASUEMaieWVNTRCtJ4S8H+9
+
+# Git SSH keyfile
+git_ssh_keyfile: "/home/{{ git_user }}/.ssh/id_rsa.pub"
+
+# Github/BitBucket Keys
+git_github_user: ""
+git_github_password: ""
+git_bitbucket_user: ""
+git_bitbucket_password: ""
